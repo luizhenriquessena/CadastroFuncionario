@@ -1,0 +1,67 @@
+object DM: TDM
+  Height = 480
+  Width = 640
+  object conRH: TADOConnection
+    Connected = True
+    ConnectionString = 
+      'Provider=SQLNCLI11.1;Password=asc@rh;Persist Security Info=True;' +
+      'User ID=asc;Initial Catalog=asc_rh;Data Source=10.1.1.245;Initia' +
+      'l File Name="";Server SPN=""'
+    LoginPrompt = False
+    Provider = 'SQLNCLI11.1'
+    Left = 24
+    Top = 8
+  end
+  object qryGridFunc: TADOQuery
+    Connection = conRH
+    CursorType = ctStatic
+    Parameters = <>
+    SQL.Strings = (
+      'select f.nomeFuncionario, f.sexo, d.departamento, c.cargo,'
+      '       case f.cancelado'
+      #9'   when '#39'T'#39' then '#39'CANCELADO'#39
+      #9'   when '#39'F'#39' then '#39'ATIVO'#39
+      #9'   end situacao'
+      '  from funcionario f'
+      '  join departamento d  on f.idDepartamento = d.idDepartamento'
+      '  join cargo'#9#9'c  on f.idCargo'#9#9'  = c.idCargo'
+      '  join cidade'#9'  cid  on f.idCidade       = cid.idCidade'
+      '  join bairro       b  on f.idBairro       = b.idBairro'
+      ' order by nomeFuncionario')
+    Left = 24
+    Top = 88
+    object qryGridFuncnomeFuncionario: TWideStringField
+      FieldName = 'nomeFuncionario'
+      Size = 70
+    end
+    object qryGridFuncsexo: TStringField
+      FieldName = 'sexo'
+      FixedChar = True
+      Size = 1
+    end
+    object qryGridFuncdepartamento: TWideStringField
+      FieldName = 'departamento'
+      Size = 70
+    end
+    object qryGridFunccargo: TWideStringField
+      FieldName = 'cargo'
+      Size = 70
+    end
+    object qryGridFuncsituacao: TStringField
+      FieldName = 'situacao'
+      ReadOnly = True
+      Size = 9
+    end
+  end
+  object qryExec: TADOQuery
+    Connection = conRH
+    Parameters = <>
+    Left = 136
+    Top = 88
+  end
+  object dsGridFunc: TDataSource
+    DataSet = qryGridFunc
+    Left = 24
+    Top = 160
+  end
+end

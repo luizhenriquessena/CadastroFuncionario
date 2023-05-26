@@ -1,0 +1,381 @@
+unit vCadFuncionario;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.Buttons, Vcl.StdCtrls, Vcl.Mask,
+  Vcl.ExtCtrls;
+
+type
+  TfrmCadFuncionario = class(TForm)
+    Panel1: TPanel;
+    btnGravar: TButton;
+    btnCancelar: TButton;
+    Panel2: TPanel;
+    edtNomeFuncionario: TLabeledEdit;
+    cbxSexo: TComboBox;
+    lblTitSexo: TLabel;
+    cbxCidade: TComboBox;
+    cbxBairro: TComboBox;
+    lblTitBairro: TLabel;
+    lblTitCidade: TLabel;
+    lblTitDepartamento: TLabel;
+    cbxDepartamento: TComboBox;
+    lblTitCargo: TLabel;
+    cbxCargo: TComboBox;
+    lblTitSituacao: TLabel;
+    cbxSituacao: TComboBox;
+    edtDataCriacao: TLabeledEdit;
+    lblTitSalario: TLabel;
+    btnLimpar: TButton;
+    lblIdCidade: TLabel;
+    lblIdBairro: TLabel;
+    lblIdDepartamento: TLabel;
+    lblIdCargo: TLabel;
+    edtSalario: TEdit;
+    lblIdSituacao: TLabel;
+    lblTipoTransacao: TLabel;
+    procedure edtNomeFuncionarioKeyPress(Sender: TObject; var Key: Char);
+    procedure btnCancelarClick(Sender: TObject);
+    procedure edtSalarioKeyPress(Sender: TObject; var Key: Char);
+    procedure cbxCidadeChange(Sender: TObject);
+    procedure cbxBairroChange(Sender: TObject);
+    procedure cbxDepartamentoChange(Sender: TObject);
+    procedure cbxCargoChange(Sender: TObject);
+    procedure cbxSituacaoChange(Sender: TObject);
+    procedure btnGravarClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnLimparClick(Sender: TObject);
+  private
+    { Private declarations }
+    procedure pGravarDados;
+    procedure pAtualizarDadosObjeto;
+    procedure pValidarDados;
+    procedure pIncluirDados;
+  public
+    { Public declarations }
+    procedure pLimparCamposCadFuncionario;
+  end;
+
+var
+  frmCadFuncionario: TfrmCadFuncionario;
+
+implementation
+
+
+{$R *.dfm}
+
+uses uFuncionario, vMain, uDM;
+
+procedure TfrmCadFuncionario.btnCancelarClick(Sender: TObject);
+begin
+  pLimparCamposCadFuncionario;
+  Close;
+end;
+
+procedure TfrmCadFuncionario.btnGravarClick(Sender: TObject);
+begin
+  // Verifica se a tela é de inserção ou alteração
+  if lblTipoTransacao.Caption = 'U' then
+  begin
+    Self.pValidarDados;
+    Self.pAtualizarDadosObjeto;
+    Self.pGravarDados;
+    frmMain.FFuncionario.Destroy;
+    Close;
+  end
+  else if lblTipoTransacao.Caption = 'I' then
+  begin
+    Self.pValidarDados;
+    Self.pAtualizarDadosObjeto;
+    Self.pIncluirDados;
+    frmMain.FFuncionario.Destroy;
+    Close;
+  end else
+    Abort;
+end;
+
+procedure TfrmCadFuncionario.btnLimparClick(Sender: TObject);
+begin
+  pLimparCamposCadFuncionario;
+end;
+
+procedure TfrmCadFuncionario.cbxBairroChange(Sender: TObject);
+begin
+  //Alterar lblIdBairro
+  with DM.qryExec do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select idBairro from bairro where bairro = '+#39+cbxBairro.Text+#39);
+    Open;
+  end;
+  lblIdBairro.Caption := DM.qryExec.FieldByName('idBairro').AsString;
+end;
+
+procedure TfrmCadFuncionario.cbxCargoChange(Sender: TObject);
+begin
+  //Alterar lblIdCargo
+  with DM.qryExec do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select idcargo from cargo where cargo = '+#39+cbxCargo.Text+#39);
+    Open;
+  end;
+  lblIdCargo.Caption := DM.qryExec.FieldByName('idCargo').AsString;
+
+  // Preencher salario default do cargo
+  with DM.qryExec do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select salario from cargo where idCargo =' + lblIdCargo.Caption);
+    Open;
+  end;
+  edtSalario.Text := DM.qryExec.FieldByName('salario').AsString;
+end;
+
+procedure TfrmCadFuncionario.cbxCidadeChange(Sender: TObject);
+begin
+  //Alterar lblIdCidade
+  with DM.qryExec do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select idCidade from cidade where cidade = '+#39+cbxCidade.Text+#39);
+    Open;
+  end;
+  lblIdCidade.Caption := DM.qryExec.FieldByName('idCidade').AsString;
+
+  //Atualizar lista de Bairro
+  //Preencher lista
+  with DM.qryExec do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select bairro from bairro where idCidade = '+ lblIdCidade.Caption);
+    Open;
+    First;
+  end;
+  cbxBairro.Items.Clear;
+  repeat
+    cbxBairro.Items.Add(DM.qryExec.FieldByName('bairro').AsString);
+    DM.qryExec.Next;
+  until DM.qryExec.Eof;
+  DM.qryExec.Close;
+  // Preencher lblIdBairro
+  frmCadFuncionario.lblIdBairro.Caption := 'X';
+end;
+
+procedure TfrmCadFuncionario.cbxDepartamentoChange(Sender: TObject);
+begin
+  //Alterar lblIdDepartamento
+  with DM.qryExec do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select idDepartamento from departamento where departamento = '+#39+cbxDepartamento.Text+#39);
+    Open;
+  end;
+  lblIdDepartamento.Caption := DM.qryExec.FieldByName('idDepartamento').AsString;
+
+  //Atualizar lista de Cargo
+  //Preencher lista
+  with DM.qryExec do
+  begin
+    Close;
+    SQL.Clear;
+    SQL.Add('select cargo from cargo where idDepartamento = '+ lblIdDepartamento.Caption);
+    Open;
+    First;
+  end;
+  cbxCargo.Items.Clear;
+  repeat
+    cbxCargo.Items.Add(DM.qryExec.FieldByName('cargo').AsString);
+    DM.qryExec.Next;
+  until DM.qryExec.Eof;
+  DM.qryExec.Close;
+  // Preencher lblIdCargo
+  frmCadFuncionario.lblIdCargo.Caption := 'X';
+end;
+
+procedure TfrmCadFuncionario.cbxSituacaoChange(Sender: TObject);
+begin
+  // Alterar lblIdSituacao
+  if cbxSituacao.Text = 'ATIVO' then
+    lblIdSituacao.Caption := 'F'
+  else if cbxSituacao.Text = 'CANCELADO' then
+    lblIdSituacao.Caption := 'T'
+  else
+    lblIdSituacao.Caption := 'X';
+end;
+
+procedure TfrmCadFuncionario.edtNomeFuncionarioKeyPress(Sender: TObject;
+  var Key: Char);
+begin
+  if not (Key in['A'..'Z','a'..'z',#8,#32,#3,#22,#24]) then
+  Key := #0;
+end;
+
+procedure TfrmCadFuncionario.edtSalarioKeyPress(Sender: TObject; var Key: Char);
+begin
+  if not (Key in['0'..'9',#8,#32,#3,#22,#24,#46]) then
+  Key := #0;
+end;
+
+procedure TfrmCadFuncionario.FormClose(Sender: TObject;
+  var Action: TCloseAction);
+begin
+  pLimparCamposCadFuncionario;
+  frmMain.pAbrirGridFuncionario;
+end;
+
+procedure TfrmCadFuncionario.pAtualizarDadosObjeto;
+begin
+  // Atualizar dados do objeto
+  frmMain.FFuncionario.Nome           := trim(edtNomeFuncionario.Text);
+  frmMain.FFuncionario.Sexo           := cbxSexo.Text;
+  frmMain.FFuncionario.IdCidade       := StrToInt(lblIdCidade.Caption);
+  frmMain.FFuncionario.IdBairro       := StrToInt(lblIdBairro.Caption);
+  frmMain.FFuncionario.IdDepartamento := StrToInt(lblIdDepartamento.Caption);
+  frmMain.FFuncionario.IdCargo        := StrToInt(lblIdCargo.Caption);
+  frmMain.FFuncionario.Situacao       := lblIdSituacao.Caption;
+  frmMain.FFuncionario.Salario        := StrToInt(StringReplace(edtSalario.Text,'.','',[rfReplaceAll]));
+end;
+
+procedure TfrmCadFuncionario.pGravarDados;
+begin
+  // Update banco de dados
+  try
+    with DM.qryExec do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('update funcionario');
+      SQL.Add('set ');
+      SQL.Add('nomeFuncionario      = ' +#39+ frmMain.FFuncionario.Nome +#39);
+      SQL.Add(',sexo                = ' +#39+ frmMain.FFuncionario.Sexo +#39);
+      SQL.Add(',idCidade            = ' + IntToStr(frmMain.FFuncionario.IdCidade));
+      SQL.Add(',idBairro            = ' + IntToStr(frmMain.FFuncionario.IdBairro));
+      SQL.Add(',idDepartamento      = ' + IntToStr(frmMain.FFuncionario.IdDepartamento));
+      SQL.Add(',idCargo             = ' + IntToStr(frmMain.FFuncionario.IdCargo));
+      SQL.Add(',cancelado           = ' +#39+ frmMain.FFuncionario.Situacao +#39);
+      SQL.Add(',salario             = ' + CurrToStr(frmMain.FFuncionario.Salario));
+      SQL.Add('where idFuncionario  = ' + IntToStr(frmMain.FFuncionario.Id));
+      ExecSQL;
+    end;
+  except
+    on E: Exception do
+    begin
+      ShowMessage(E.Message);
+      Abort;
+    end;
+  end;
+end;
+
+procedure TfrmCadFuncionario.pIncluirDados;
+begin
+  // Insert banco de dados
+  try
+    with DM.qryExec do
+    begin
+      Close;
+      SQL.Clear;
+      SQL.Add('insert into funcionario (nomeFuncionario, sexo, idCidade, idBairro, idDepartamento, idCargo, salario)');
+      SQL.Add('values ( ');
+      SQL.Add(#39+ frmMain.FFuncionario.Nome +#39);
+      SQL.Add(','+#39+ frmMain.FFuncionario.Sexo +#39);
+      SQL.Add(','+ IntToStr(frmMain.FFuncionario.IdCidade));
+      SQL.Add(','+ IntToStr(frmMain.FFuncionario.IdBairro));
+      SQL.Add(','+ IntToStr(frmMain.FFuncionario.IdDepartamento));
+      SQL.Add(','+ IntToStr(frmMain.FFuncionario.IdCargo));
+      SQL.Add(','+ CurrToStr(frmMain.FFuncionario.Salario)+')');
+      ExecSQL;
+    end;
+  except
+    on E: Exception do
+    begin
+      ShowMessage(E.Message);
+      Abort;
+    end;
+  end;
+end;
+
+procedure TfrmCadFuncionario.pLimparCamposCadFuncionario;
+begin
+  edtNomeFuncionario.Clear;
+  cbxSexo.ItemIndex := -1;
+  cbxCidade.ItemIndex := -1;
+  cbxBairro.ItemIndex := -1;
+  cbxDepartamento.ItemIndex := -1;
+  cbxCargo.ItemIndex := -1;
+  cbxBairro.ItemIndex := -1;
+  cbxSituacao.ItemIndex := -1;
+  edtSalario.Clear;
+  edtDataCriacao.Clear;
+end;
+
+procedure TfrmCadFuncionario.pValidarDados;
+var vCheckNome : string;
+begin
+  //Validar Nome
+  vCheckNome := trim(edtNomeFuncionario.Text);
+  if Length(vCheckNome) < 1 then
+  begin
+    ShowMessage('Favor informar o nome do funcionário.');
+    Abort;
+  end;
+
+  //Validar Sexo
+  if cbxSexo.ItemIndex = -1 then
+  begin
+    ShowMessage('Favor informar o sexo do funcionário');
+    Abort;
+  end;
+
+  //Validar Cidade
+  if cbxCidade.ItemIndex = -1 then
+  begin
+    ShowMessage('Favor informar a cidade do funcionário');
+    Abort;
+  end;
+
+  //Validar Bairro
+  if cbxBairro.ItemIndex = -1 then
+  begin
+    ShowMessage('Favor informar o Bairro do funcionário');
+    Abort;
+  end;
+
+  //Validar Departamento
+  if cbxDepartamento.ItemIndex = -1 then
+  begin
+    ShowMessage('Favor informar o departamento do funcionário');
+    Abort;
+  end;
+
+  //Validar Cargo
+  if cbxCargo.ItemIndex = -1 then
+  begin
+    ShowMessage('Favor informar o cargo do funcionário');
+    Abort;
+  end;
+
+  //Validar Situação
+  if cbxSituacao.ItemIndex = -1 then
+  begin
+    ShowMessage('Favor informar a situação do funcionário');
+    Abort;
+  end;
+
+  //Validar Salário
+  if Length(trim(StringReplace(edtSalario.Text,'.','',[rfReplaceAll]))) < 1 then
+  begin
+    ShowMessage('Favor informar o salário do funcionário');
+    Abort;
+  end;
+end;
+
+end.

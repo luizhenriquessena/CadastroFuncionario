@@ -1,0 +1,18 @@
+program acsRH;
+
+uses
+  Vcl.Forms,
+  vMain in 'vMain.pas' {frmMain},
+  vCadFuncionario in 'vCadFuncionario.pas' {frmCadFuncionario},
+  uDM in 'uDM.pas' {DM: TDataModule};
+
+{$R *.res}
+
+begin
+  Application.Initialize;
+  Application.MainFormOnTaskbar := True;
+  Application.CreateForm(TfrmMain, frmMain);
+  Application.CreateForm(TfrmCadFuncionario, frmCadFuncionario);
+  Application.CreateForm(TDM, DM);
+  Application.Run;
+end.

@@ -1,0 +1,52 @@
+unit uFuncLH;
+
+interface
+
+uses
+  Controls, SysUtils, Grids, DBGrids;
+
+  function FormatarReal(vValor:Real):String;
+  function FormatarInteiro(vValor:Integer):String;
+  function FormatarDecimal(vValor:Real):String;
+  procedure DimensionarGrid(dbg: TDbGrid; var formulario);
+
+  var
+  vTXT1: String;
+  vN1: Integer;
+  vR1: Real;
+implementation
+
+function FormatarReal(vValor:Real) : String; //Função para formatar valor para Real R$
+begin
+  vTXT1  := FormatFloat('R$ #,##0.00',vValor);
+  Result := vTXT1;
+end;
+
+function FormatarInteiro(vValor:Integer):String; //Função para formatar valor para inteiro com pontuação.
+begin
+  vTXT1  := FormatFloat('#,##0',vValor);
+  Result := vTXT1;
+end;
+
+function FormatarDecimal(vValor:Real) :String; //Função para formatar valor com decimal
+begin
+  vTXT1  := FormatFloat('#,##0.00',vValor);
+  Result := vTXT1;
+end;
+
+procedure DimensionarGrid(dbg: TDbGrid; var formulario);
+var
+   f, t, Idx: Integer;
+begin
+   for Idx := 0 to dbg.Columns.Count - 1  do
+   begin
+     f := dbg.Canvas.TextWidth(Dbg.Columns[Idx].Field.AsString + 'AAA');
+     t := dbg.Canvas.TextWidth(Dbg.Columns[Idx].Title.Caption+'AAA');
+     if f < t then
+       dbg.Columns[Idx].Width := t
+     else
+       dbg.Columns[Idx].Width := f;
+   end;
+end;
+
+end.

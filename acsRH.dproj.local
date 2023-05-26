@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<BorlandProject>
+	<Transactions>
+    <Transaction>2023/05/24 17:09:31.000.987,=C:\Users\luiz\Documents\Embarcadero\Studio\Projects\Unit1.pas</Transaction>
+    <Transaction>2023/05/24 17:12:41.000.584,C:\Users\luiz\Documents\Embarcadero\Studio\Projects\Unit1.pas=C:\Users\luiz\Documents\Embarcadero\Studio\Projects\vMain.pas</Transaction>
+    <Transaction>2023/05/24 17:12:41.000.584,C:\Users\luiz\Documents\Embarcadero\Studio\Projects\Unit1.dfm=C:\Users\luiz\Documents\Embarcadero\Studio\Projects\vMain.dfm</Transaction>
+    <Transaction>2023/05/24 17:13:01.000.043,C:\Users\luiz\Documents\Embarcadero\Studio\Projects\Project1.dproj=C:\Users\luiz\Documents\Embarcadero\Studio\Projects\acsRH.dproj</Transaction>
+    <Transaction>2023/05/24 17:15:58.000.292,=C:\Users\luiz\Documents\Embarcadero\Studio\Projects\Unit2.pas</Transaction>
+    <Transaction>2023/05/24 17:16:50.000.404,C:\Users\luiz\Documents\Embarcadero\Studio\Projects\Unit2.dfm=C:\Users\luiz\Documents\Embarcadero\Studio\Projects\vCadFuncionario.dfm</Transaction>
+    <Transaction>2023/05/24 17:16:50.000.404,C:\Users\luiz\Documents\Embarcadero\Studio\Projects\Unit2.pas=C:\Users\luiz\Documents\Embarcadero\Studio\Projects\vCadFuncionario.pas</Transaction>
+    <Transaction>2023/05/24 17:47:36.000.997,=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\Unit3.pas</Transaction>
+    <Transaction>2023/05/24 17:47:45.000.879,=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\Unit1.pas</Transaction>
+    <Transaction>2023/05/24 18:27:59.000.376,C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\uDM.pas=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\Unit1.pas</Transaction>
+    <Transaction>2023/05/24 18:27:59.000.376,C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\uDM.dfm=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\Unit1.dfm</Transaction>
+    <Transaction>2023/05/25 08:28:00.000.930,=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\Unit1.pas</Transaction>
+    <Transaction>2023/05/25 08:34:57.000.391,=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\uFuncLH.pas</Transaction>
+    <Transaction>2023/05/25 10:39:28.000.766,=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\Unit1.pas</Transaction>
+    <Transaction>2023/05/25 10:39:52.000.504,C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\Unit1.pas=C:\Users\luiz\Documents\Teste ASC Solutions\Teste ASC Solutions\Etapa 3 Avaliação de conhecimentos de sintaxe do Delphi\uFuncionario.pas</Transaction>
+  </Transactions>
+</BorlandProject>
